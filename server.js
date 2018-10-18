@@ -3,7 +3,14 @@
 const config = require("config");
 const express = require("express");
 const mongoose = require("mongoose");
+
+// Routes
+const users = require('./routes/api/users');
+const profile = require('./routes/api/profile');
+const posts = require('./routes/api/posts');
+
 const app = express();
+
 const PORT = config.get('PORT');
 
 // DB Config
@@ -22,5 +29,11 @@ mongoose
 app.get("/", (req, res) => {
     res.send("Works");
 });
+
+// Use routes
+app.use('/users', users);
+app.use('/profile', profile);
+app.use('/posts', posts);
+
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
