@@ -3,6 +3,7 @@
 const config = require("config");
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require('body-parser');
 
 // Routes
 const users = require('./routes/api/users');
@@ -12,6 +13,12 @@ const posts = require('./routes/api/posts');
 const app = express();
 
 const PORT = config.get('PORT');
+
+// Middlewares
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+app.use(bodyParser.json());
 
 // DB Config
 const db = config.get('mongoURI');
@@ -34,6 +41,5 @@ app.get("/", (req, res) => {
 app.use('/users', users);
 app.use('/profile', profile);
 app.use('/posts', posts);
-
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
