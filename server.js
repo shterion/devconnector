@@ -1,8 +1,8 @@
 // process.env.NODE_CONFIG_DIR = './config'
 
-const config = require("config");
-const express = require("express");
-const mongoose = require("mongoose");
+const config = require('config');
+const express = require('express');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 // Routes
@@ -16,7 +16,7 @@ const PORT = config.get('PORT');
 
 // Middlewares
 app.use(bodyParser.urlencoded({
-    extended: false
+  extended: false,
 }));
 app.use(bodyParser.json());
 
@@ -25,16 +25,16 @@ const db = config.get('mongoURI');
 
 // Connect to MongoDB
 mongoose
-    .connect(
-        db, {
-            useNewUrlParser: true
-        }
-    )
-    .then(() => console.log("MongoDB connected..."))
-    .catch(err => console.log(err));
+  .connect(
+    db, {
+      useNewUrlParser: true,
+    },
+  )
+  .then(() => console.log('MongoDB connected...'))
+  .catch(err => console.log(err));
 
-app.get("/", (req, res) => {
-    res.send("Works");
+app.get('/', (req, res) => {
+  res.send('Works');
 });
 
 // Use routes
