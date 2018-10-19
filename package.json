@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "pretest": "eslint server.js models routes --ext .js --ext .json",
+    "lint-fix": "eslint server.js models routes --ext .js --ext .json --fix"
   },
   "author": "Shterion Yanev",
   "license": "MIT",
@@ -20,5 +22,16 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "validator": "^10.8.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^5.7.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-json": "^1.2.1",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-mocha": "^5.2.0",
+    "eslint-plugin-react": "^7.11.1",
+    "mocha": "^5.2.0"
   }
 }
