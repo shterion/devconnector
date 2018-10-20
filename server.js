@@ -21,6 +21,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+
 // DB Config
 const db = config.get('mongoURI');
 
@@ -34,9 +35,7 @@ const mongoOptions = {
   autoReconnect: true,
 };
 
-mongoose.connect(
-  db, mongoOptions,
-)
+mongoose.connect(db, mongoOptions)
   .then(() => log.info('MongoDB connected...'))
   .catch(err => log.error(err));
 

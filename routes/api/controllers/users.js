@@ -9,12 +9,6 @@ const log = require('./../utils/logger');
 // Load User model
 const User = require('./../../../models/User');
 
-router.get('/', (req, res) => {
-  res.json({
-    msg: 'Users',
-  });
-});
-
 router.post('/register', async (req, res) => {
   try {
     const userExists = await User.findOne({
