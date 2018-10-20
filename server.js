@@ -1,4 +1,4 @@
-// process.env.NODE_CONFIG_DIR = './config'
+// require('./config/config');
 
 const config = require('config');
 const express = require('express');
@@ -6,13 +6,14 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 // Routes
-const users = require('./routes/api/users');
-const profile = require('./routes/api/profile');
-const posts = require('./routes/api/posts');
+const users = require('./routes/api/controllers/users');
+const profile = require('./routes/api/controllers/profile');
+const posts = require('./routes/api/controllers/posts');
+const log = require('./routes/api/utils/logger');
 
 const app = express();
 
-const PORT = config.get('PORT');
+const port = process.env.PORT || 5000;
 
 // Middlewares
 app.use(bodyParser.urlencoded({
@@ -24,14 +25,20 @@ app.use(bodyParser.json());
 const db = config.get('mongoURI');
 
 // Connect to MongoDB
-mongoose
-  .connect(
-    db, {
-      useNewUrlParser: true,
-    },
-  )
-  .then(() => console.log('MongoDB connected...'))
-  .catch(err => console.log(err));
+const mongoOptions = {
+  keepAlive: true,
+  connectTimeoutMS: 30000,
+  reconnectInterval: 1000,
+  reconnectTries: Number.MAX_VALUE,
+  useNewUrlParser: true,
+  autoReconnect: true,
+};
+
+mongoose.connect(
+  db, mongoOptions,
+)
+  .then(() => log.info('MongoDB connected...'))
+  .catch(err => log.error(err));
 
 app.get('/', (req, res) => {
   res.send('Works');
@@ -42,4 +49,6 @@ app.use('/users', users);
 app.use('/profile', profile);
 app.use('/posts', posts);
 
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+app.listen(port, () => log.info(`Server is running on port ${port}`));
+
+module.exports = app;
