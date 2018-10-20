@@ -4,8 +4,10 @@ const router = express.Router();
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 
+const log = require('./../utils/logger');
+
 // Load User model
-const User = require('./../../models/User');
+const User = require('./../../../models/User');
 
 router.get('/', (req, res) => {
   res.json({
@@ -41,12 +43,12 @@ router.post('/register', async (req, res) => {
               const user = await newUser.save();
               res.json(user);
             } catch (error) {
-              console.log(error);
+              log.error(error);
             }
           });
         });
       } catch (error) {
-        console.log(error);
+        log.error(error);
       }
     } else {
       res.status(400).json({
@@ -54,7 +56,7 @@ router.post('/register', async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    log.error(error);
   }
 });
 

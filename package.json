@@ -7,13 +7,18 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "pretest": "eslint server.js models routes --ext .js --ext .json",
-    "lint-fix": "eslint server.js models routes --ext .js --ext .json --fix"
+    "lint-fix": "eslint server.js models routes --ext .js --ext .json --fix",
+    "test": "nyc --reporter=html --reporter=text mocha test/*",
+    "test-mocha": "mocha test/*",
+    "test-watch": "nodemon --exec \"npm test\""
   },
   "author": "Shterion Yanev",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "bunyan": "^1.8.12",
+    "bunyan-format": "^0.2.1",
     "config": "^2.0.1",
     "express": "^4.16.4",
     "gravatar": "^1.6.0",
@@ -25,6 +30,7 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "chai-http": "^4.2.0",
     "eslint": "^5.7.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
@@ -32,6 +38,15 @@
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-mocha": "^5.2.0",
     "eslint-plugin-react": "^7.11.1",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "supertest": "^3.3.0"
+  },
+  "nyc": {
+    "exclude": [
+      "config",
+      "tests",
+      "routes/api/utils/logger.js"
+    ]
   }
 }
