@@ -3,7 +3,8 @@ const express = require('express');
 const router = express.Router();
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
-
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const log = require('./../utils/logger');
 
 // Load User model
@@ -67,9 +68,26 @@ router.post('/login', async (req, res) => {
       bcrypt.compare(password, user.password)
         .then((isMatch) => {
           if (isMatch) {
-            return res.status(200).json({ msg: 'Success' });
+
+            const secret = config.get('secret');
+            const payload = {
+              id: user.id,
+              name: user.name,
+              email: user.email
+            };
+
+            jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
+              if (err) {
+                return res.send(err);
+              }
+              res.send({
+                success: true,
+                token: `Bearer ${token}`
+              })
+            });
+          } else {
+            return res.status(400).json({ password: 'Password incorrect' });
           }
-          return res.status(400).json({ password: 'Password incorrect' });
         });
     }
   } catch (error) {
