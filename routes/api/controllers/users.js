@@ -61,6 +61,7 @@ router.post('/login', async (req, res) => {
     const { password } = req.body;
 
     const user = await User.findOne({ email });
+    let token;
 
     if (!user) {
       res.status(404).json({ email: 'User not found!' });
@@ -68,26 +69,26 @@ router.post('/login', async (req, res) => {
       bcrypt.compare(password, user.password)
         .then((isMatch) => {
           if (isMatch) {
-
             const secret = config.get('secret');
             const payload = {
               id: user.id,
               name: user.name,
-              email: user.email
+              email: user.email,
             };
 
-            jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
+            jwt.sign(payload, secret, { expiresIn: 3600 }, (err, jwtToken) => {
               if (err) {
                 return res.send(err);
               }
-              res.send({
+              token = jwtToken;
+              return res.send({
                 success: true,
-                token: `Bearer ${token}`
-              })
+                token: `Bearer ${jwtToken}`,
+              });
             });
-          } else {
-            return res.status(400).json({ password: 'Password incorrect' });
+            return token;
           }
+          return res.status(400).json({ password: 'Password incorrect' });
         });
     }
   } catch (error) {
