@@ -4,6 +4,7 @@ const config = require('config');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const passport = require('passport');
 
 // Routes
 const users = require('./routes/api/controllers/users');
@@ -20,7 +21,6 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 app.use(bodyParser.json());
-
 
 // DB Config
 const db = config.get('mongoURI');
@@ -42,6 +42,11 @@ mongoose.connect(db, mongoOptions)
 app.get('/', (req, res) => {
   res.send('Works');
 });
+
+app.use(passport.initialize());
+
+// Passport Config
+require('./config/passport')(passport);
 
 // Use routes
 app.use('/users', users);

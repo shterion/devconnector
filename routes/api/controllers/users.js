@@ -5,12 +5,22 @@ const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const passport = require('passport');
 const log = require('./../utils/logger');
+
+// Load Input Validation
+const validateRegisterInput = require('./../../../validation/register');
 
 // Load User model
 const User = require('./../../../models/User');
 
 router.post('/register', async (req, res) => {
+  const { errors, isValid } = validateRegisterInput(req.body);
+
+  if (!isValid) {
+    return  res.status(400).json(errors);
+  }
+
   try {
     const userExists = await User.findOne({
       email: req.body.email,
@@ -94,6 +104,14 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     log.error(error);
   }
+});
+
+router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.json({
+    id: req.user.id,
+    name: req.user.name,
+    email: req.user.email,
+  });
 });
 
 module.exports = router;
