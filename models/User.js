@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const { Schema } = mongoose;
 
@@ -8,30 +8,31 @@ const { Schema } = mongoose;
 const UserSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   email: {
     type: String,
-    required: true,
+    required: true
   },
   password: {
     type: String,
-    required: true,
+    required: true
   },
   avatar: {
-    type: String,
+    type: String
   },
   date: {
     type: Date,
-    default: Date.now(),
-  },
+    default: Date.now()
+  }
 });
 
 // Hash the password before saving
-UserSchema.pre('save', function (next) { // eslint-disable-line
+UserSchema.pre("save", function(next) {
+  // eslint-disable-line
   const user = this;
 
-  if (user.isModified('password')) {
+  if (user.isModified("password")) {
     bcrypt.genSalt(10, (error, salt) => {
       bcrypt.hash(user.password, salt, (err, hash) => {
         user.password = hash;
@@ -43,5 +44,5 @@ UserSchema.pre('save', function (next) { // eslint-disable-line
   }
 });
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model("User", UserSchema);
 module.exports = User;

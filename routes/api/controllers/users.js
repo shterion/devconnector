@@ -10,15 +10,19 @@ const log = require('./../utils/logger');
 
 // Load Input Validation
 const validateRegisterInput = require('./../../../validation/register');
+const validateLoginInput = require('./../../../validation/login');
 
 // Load User model
 const User = require('./../../../models/User');
 
 router.post('/register', async (req, res) => {
-  const { errors, isValid } = validateRegisterInput(req.body);
+  const {
+    errors,
+    isValid
+  } = validateRegisterInput(req.body);
 
   if (!isValid) {
-    return  res.status(400).json(errors);
+    return res.status(400).json(errors);
   }
 
   try {
@@ -66,15 +70,31 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  try {
-    const { email } = req.body;
-    const { password } = req.body;
+  const {
+    errors,
+    isValid
+  } = validateLoginInput(req.body);
 
-    const user = await User.findOne({ email });
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  try {
+    const {
+      email
+    } = req.body;
+    const {
+      password
+    } = req.body;
+
+    const user = await User.findOne({
+      email
+    });
     let token;
 
     if (!user) {
-      res.status(404).json({ email: 'User not found!' });
+      errors.email = 'User not found';
+      res.status(404).json(errors);
     } else {
       bcrypt.compare(password, user.password)
         .then((isMatch) => {
@@ -86,7 +106,9 @@ router.post('/login', async (req, res) => {
               email: user.email,
             };
 
-            jwt.sign(payload, secret, { expiresIn: 3600 }, (err, jwtToken) => {
+            jwt.sign(payload, secret, {
+              expiresIn: 3600
+            }, (err, jwtToken) => {
               if (err) {
                 return res.send(err);
               }
@@ -97,8 +119,10 @@ router.post('/login', async (req, res) => {
               });
             });
             return token;
+          } else {
+            errors.password = 'Password incorrect';
+            return res.status(400).json(errors);
           }
-          return res.status(400).json({ password: 'Password incorrect' });
         });
     }
   } catch (error) {
@@ -106,7 +130,9 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/current', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
   res.json({
     id: req.user.id,
     name: req.user.name,
