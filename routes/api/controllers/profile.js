@@ -29,7 +29,7 @@ router.get('/', passport.authenticate('jwt', {
 
     if (!profile) {
       errors.noprofile = 'There is no profile for this user';
-      res.status(404).json(errors);
+      return res.status(404).json(errors);
     }
 
     res.json(profile);
@@ -192,7 +192,10 @@ router.post('/experience', passport.authenticate('jwt', {
   session: false
 }), async (req, res) => {
 
-  const { errors, isValid } = validateExperienceInput(req.body);
+  const {
+    errors,
+    isValid
+  } = validateExperienceInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
@@ -233,7 +236,10 @@ router.post('/education', passport.authenticate('jwt', {
   session: false
 }), async (req, res) => {
 
-  const { errors, isValid } = validateEducationInput(req.body);
+  const {
+    errors,
+    isValid
+  } = validateEducationInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
@@ -266,4 +272,79 @@ router.post('/education', passport.authenticate('jwt', {
     log.error(e);
   }
 });
+
+// @route   DELETE api/profile/experience/:exp_id
+// @desc    Delete experience from profile
+// @access  Private
+router.delete('/experience/:exp_id', passport.authenticate('jwt', {
+  session: false
+}), async (req, res) => {
+  let errors = {};
+
+  try {
+    const profile = await Profile.findOne({
+      user: req.user.id
+    });
+
+    const expLength = profile.experience.length;
+    const updatedExp = profile.experience.filter((exp) => !(exp.id === req.params.exp_id));
+
+    if (expLength === updatedExp.length) {
+      errors.noChange = 'No experience with this id found!'
+      return res.send(errors);
+    }
+    profile.experience = updatedExp;
+
+    try {
+      const savedProfile = await profile.save();
+      res.status(200).send(savedProfile);
+    } catch (e) {
+      errors.cantSave = 'Profile can not be saved!';
+      log.error(e);
+      res.status(500).send(errors);
+    }
+
+  } catch (e) {
+    errors.noprofile = 'Proifle not found!';
+    res.status(404).json(errors);
+  }
+});
+
+// @route   DELETE api/profile/education/:edu_id
+// @desc    Delete education from profile
+// @access  Private
+router.delete('/education/:edu_id', passport.authenticate('jwt', {
+  session: false
+}), async (req, res) => {
+  let errors = {};
+
+  try {
+    const profile = await Profile.findOne({
+      user: req.user.id
+    });
+
+    const eduLength = profile.education.length;
+    const updatedEdu = profile.education.filter((edu) => !(edu.id === req.params.edu_id));
+
+    if (eduLength === updatedEdu.length) {
+      errors.noChange = 'No education with this id found!'
+      return res.send(errors);
+    }
+    profile.education = updatedEdu;
+
+    try {
+      const savedProfile = await profile.save();
+      res.status(200).send(savedProfile);
+    } catch (e) {
+      errors.cantSave = 'Profile can not be saved!';
+      log.error(e);
+      res.status(500).send(errors);
+    }
+
+  } catch (e) {
+    errors.noprofile = 'Proifle not found!';
+    res.status(404).json(errors);
+  }
+});
+
 module.exports = router;
