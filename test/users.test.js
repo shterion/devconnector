@@ -18,10 +18,11 @@ describe('/users/register - User registration', () => {
     name: 'Jack Lee',
     email: 'lee@yahoo.com',
     password: 'qwerty',
+    confirmPassword: 'qwerty',
   };
   it('should return 200 and the new created user', (done) => {
     request(app)
-      .post('/users/register')
+      .post('/api/users/register')
       .send(user)
       .then((res) => {
         expect(res.body).to.have.own.property('_id');
@@ -37,7 +38,7 @@ describe('/users/register - User registration', () => {
 
   it('should return 400 and if use already exists', (done) => {
     request(app)
-      .post('/users/register')
+      .post('/api/users/register')
       .send(users[0])
       .then((res) => {
         expect(res).to.have.status(400);
@@ -50,10 +51,10 @@ describe('/users/register - User registration', () => {
   });
 });
 
-describe('/users/login - User login', () => {
+describe('/api/users/login - User login', () => {
   it('should return 200 and the logged in user', (done) => {
     request(app)
-      .post('/users/login')
+      .post('/api/users/login')
       .send({
         email: users[0].email,
         password: users[0].password,
@@ -71,7 +72,7 @@ describe('/users/login - User login', () => {
 
   it('should return 404 if no user found', (done) => {
     request(app)
-      .post('/users/login')
+      .post('/api/users/login')
       .send({
         email: 'foo@gmail.com',
         password: users[0].password,
@@ -88,7 +89,7 @@ describe('/users/login - User login', () => {
 
   it('should return 400 if password incorrect', (done) => {
     request(app)
-      .post('/users/login')
+      .post('/api/users/login')
       .send({
         email: users[0].email,
         password: 'qweop',
