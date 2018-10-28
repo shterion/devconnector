@@ -347,4 +347,17 @@ router.delete('/education/:edu_id', passport.authenticate('jwt', {
   }
 });
 
+// @route   DELETE api/profile/
+// @desc    Delete user and profile
+// @access  Private
+router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const profile = await Profile.findOneAndRemove({ user: req.user.id });
+    const user = await User.findOneAndRemove({ _id: req.user.id});
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).send('Something went wrong');
+  }
+});
+
 module.exports = router;
