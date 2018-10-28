@@ -1,13 +1,18 @@
+/* eslint consistent-return: "off" */
+
 const express = require('express');
 const passport = require('passport');
 
 const router = express.Router();
 const log = require('./../utils/logger');
 
+// Load validation
 const valdiateProfileInput = require('./../../../validation/profile');
+const validateExperienceInput = require('./../../../validation/experience');
+const validateEducationInput = require('./../../../validation/education');
 
 // Load Models
-// const User = require('./../../../models/User');
+const User = require('./../../../models/User');
 const Profile = require('./../../../models/Profile');
 
 // @route   GET api/profile
@@ -48,7 +53,9 @@ router.get('/all', async (req, res) => {
     res.json(profiles);
   } catch (e) {
     log.error(e);
-    res.status(404).json({ profile: 'There are profiles' });
+    res.status(404).json({
+      profile: 'There are profiles'
+    });
   }
 });
 
@@ -78,7 +85,9 @@ router.get('/handle/:handle', async (req, res) => {
 router.get('/user/:user_id', async (req, res) => {
   const errors = {};
   try {
-    const profile = await Profile.findOne({ user: req.params.user_id }).populate('user', ['name', 'avatar']);
+    const profile = await Profile.findOne({
+      user: req.params.user_id
+    }).populate('user', ['name', 'avatar']);
     if (!profile) {
       errors.noprofile = 'There is no profile for this user';
       return res.status(404).json(errors);
@@ -86,7 +95,9 @@ router.get('/user/:user_id', async (req, res) => {
     res.json(profile);
   } catch (e) {
     log.error(e);
-    res.status(404).json({ profile: 'There is no profile for this user' });
+    res.status(404).json({
+      profile: 'There is no profile for this user'
+    });
   }
 });
 
@@ -174,5 +185,85 @@ router.post('/', passport.authenticate('jwt', {
   }
 });
 
+// @route   POST api/profile/experience
+// @desc    Add experience to profile
+// @access  Private
+router.post('/experience', passport.authenticate('jwt', {
+  session: false
+}), async (req, res) => {
 
+  const { errors, isValid } = validateExperienceInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  try {
+    const profile = await Profile.findOne({
+      user: req.user.id
+    });
+    if (profile) {
+      const newExp = {
+        title: req.body.title,
+        company: req.body.company,
+        location: req.body.location,
+        from: req.body.from,
+        to: req.body.to,
+        current: req.body.curent,
+        description: req.body.description
+      };
+
+      profile.experience.unshift(newExp);
+      const updatedProfile = await profile.save();
+      return res.json(updatedProfile);
+    } else {
+      res.status(404).json({
+        noprofile: 'There is no profile for this user'
+      });
+    }
+  } catch (e) {
+    log.error(e);
+  }
+});
+
+// @route   POST api/profile/education
+// @desc    Add aducation to profile
+// @access  Private
+router.post('/education', passport.authenticate('jwt', {
+  session: false
+}), async (req, res) => {
+
+  const { errors, isValid } = validateEducationInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  try {
+    const profile = await Profile.findOne({
+      user: req.user.id
+    });
+    if (profile) {
+      const newEdu = {
+        school: req.body.school,
+        degree: req.body.degree,
+        fieldOfStudy: req.body.fieldOfStudy,
+        from: req.body.from,
+        to: req.body.to,
+        current: req.body.curent,
+        description: req.body.description
+      };
+
+      profile.education.unshift(newEdu);
+      const updatedProfile = await profile.save();
+      return res.json(updatedProfile);
+    } else {
+      res.status(404).json({
+        noprofile: 'There is no profile for this user'
+      });
+    }
+  } catch (e) {
+    log.error(e);
+  }
+});
 module.exports = router;

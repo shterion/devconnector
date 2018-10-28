@@ -1,3 +1,5 @@
+/* eslint consistent-return: "off" */
+
 const express = require('express');
 
 const router = express.Router();
@@ -18,7 +20,7 @@ const User = require('./../../../models/User');
 router.post('/register', async (req, res) => {
   const {
     errors,
-    isValid
+    isValid,
   } = validateRegisterInput(req.body);
 
   if (!isValid) {
@@ -72,7 +74,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const {
     errors,
-    isValid
+    isValid,
   } = validateLoginInput(req.body);
 
   if (!isValid) {
@@ -80,15 +82,11 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    const {
-      email
-    } = req.body;
-    const {
-      password
-    } = req.body;
+    const { email } = req.body;
+    const { password } = req.body;
 
     const user = await User.findOne({
-      email
+      email,
     });
     let token;
 
@@ -107,7 +105,7 @@ router.post('/login', async (req, res) => {
             };
 
             jwt.sign(payload, secret, {
-              expiresIn: 3600
+              expiresIn: 3600,
             }, (err, jwtToken) => {
               if (err) {
                 return res.send(err);
@@ -119,10 +117,9 @@ router.post('/login', async (req, res) => {
               });
             });
             return token;
-          } else {
-            errors.password = 'Password incorrect';
-            return res.status(400).json(errors);
           }
+          errors.password = 'Password incorrect';
+          return res.status(400).json(errors);
         });
     }
   } catch (error) {
@@ -131,7 +128,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/current', passport.authenticate('jwt', {
-  session: false
+  session: false,
 }), (req, res) => {
   res.json({
     id: req.user.id,
