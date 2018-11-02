@@ -4,6 +4,9 @@
   "description": "Social network for developers",
   "main": "server.js",
   "scripts": {
+    "client-install": "npm install --prefix client",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "start": "node server.js",
     "server": "nodemon server.js",
     "pretest": "eslint server.js models routes test --ext .js --ext .json",
@@ -19,6 +22,7 @@
     "body-parser": "^1.18.3",
     "bunyan": "^1.8.12",
     "bunyan-format": "^0.2.1",
+    "concurrently": "^4.0.1",
     "config": "^2.0.1",
     "express": "^4.16.4",
     "gravatar": "^1.6.0",
@@ -31,7 +35,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-http": "^4.2.0",
-    "eslint": "^5.7.0",
+    "eslint": "5.6.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-json": "^1.2.1",
