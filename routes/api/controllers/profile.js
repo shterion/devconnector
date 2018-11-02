@@ -54,7 +54,7 @@ router.get('/all', async (req, res) => {
   } catch (e) {
     log.error(e);
     res.status(404).json({
-      profile: 'There are profiles'
+      profile: 'There are profiles',
     });
   }
 });
@@ -86,7 +86,7 @@ router.get('/user/:user_id', async (req, res) => {
   const errors = {};
   try {
     const profile = await Profile.findOne({
-      user: req.params.user_id
+      user: req.params.user_id,
     }).populate('user', ['name', 'avatar']);
     if (!profile) {
       errors.noprofile = 'There is no profile for this user';
@@ -96,7 +96,7 @@ router.get('/user/:user_id', async (req, res) => {
   } catch (e) {
     log.error(e);
     res.status(404).json({
-      profile: 'There is no profile for this user'
+      profile: 'There is no profile for this user',
     });
   }
 });
@@ -189,12 +189,11 @@ router.post('/', passport.authenticate('jwt', {
 // @desc    Add experience to profile
 // @access  Private
 router.post('/experience', passport.authenticate('jwt', {
-  session: false
+  session: false,
 }), async (req, res) => {
-
   const {
     errors,
-    isValid
+    isValid,
   } = validateExperienceInput(req.body);
 
   if (!isValid) {
@@ -203,7 +202,7 @@ router.post('/experience', passport.authenticate('jwt', {
 
   try {
     const profile = await Profile.findOne({
-      user: req.user.id
+      user: req.user.id,
     });
     if (profile) {
       const newExp = {
@@ -213,17 +212,16 @@ router.post('/experience', passport.authenticate('jwt', {
         from: req.body.from,
         to: req.body.to,
         current: req.body.curent,
-        description: req.body.description
+        description: req.body.description,
       };
 
       profile.experience.unshift(newExp);
       const updatedProfile = await profile.save();
       return res.json(updatedProfile);
-    } else {
-      res.status(404).json({
-        noprofile: 'There is no profile for this user'
-      });
     }
+    res.status(404).json({
+      noprofile: 'There is no profile for this user',
+    });
   } catch (e) {
     log.error(e);
   }
@@ -233,12 +231,11 @@ router.post('/experience', passport.authenticate('jwt', {
 // @desc    Add aducation to profile
 // @access  Private
 router.post('/education', passport.authenticate('jwt', {
-  session: false
+  session: false,
 }), async (req, res) => {
-
   const {
     errors,
-    isValid
+    isValid,
   } = validateEducationInput(req.body);
 
   if (!isValid) {
@@ -247,7 +244,7 @@ router.post('/education', passport.authenticate('jwt', {
 
   try {
     const profile = await Profile.findOne({
-      user: req.user.id
+      user: req.user.id,
     });
     if (profile) {
       const newEdu = {
@@ -257,17 +254,16 @@ router.post('/education', passport.authenticate('jwt', {
         from: req.body.from,
         to: req.body.to,
         current: req.body.curent,
-        description: req.body.description
+        description: req.body.description,
       };
 
       profile.education.unshift(newEdu);
       const updatedProfile = await profile.save();
       return res.json(updatedProfile);
-    } else {
-      res.status(404).json({
-        noprofile: 'There is no profile for this user'
-      });
     }
+    res.status(404).json({
+      noprofile: 'There is no profile for this user',
+    });
   } catch (e) {
     log.error(e);
   }
@@ -277,20 +273,20 @@ router.post('/education', passport.authenticate('jwt', {
 // @desc    Delete experience from profile
 // @access  Private
 router.delete('/experience/:exp_id', passport.authenticate('jwt', {
-  session: false
+  session: false,
 }), async (req, res) => {
-  let errors = {};
+  const errors = {};
 
   try {
     const profile = await Profile.findOne({
-      user: req.user.id
+      user: req.user.id,
     });
 
     const expLength = profile.experience.length;
-    const updatedExp = profile.experience.filter((exp) => !(exp.id === req.params.exp_id));
+    const updatedExp = profile.experience.filter(exp => !(exp.id === req.params.exp_id));
 
     if (expLength === updatedExp.length) {
-      errors.noChange = 'No experience with this id found!'
+      errors.noChange = 'No experience with this id found!';
       return res.send(errors);
     }
     profile.experience = updatedExp;
@@ -303,7 +299,6 @@ router.delete('/experience/:exp_id', passport.authenticate('jwt', {
       log.error(e);
       res.status(500).send(errors);
     }
-
   } catch (e) {
     errors.noprofile = 'Proifle not found!';
     res.status(404).json(errors);
@@ -314,20 +309,20 @@ router.delete('/experience/:exp_id', passport.authenticate('jwt', {
 // @desc    Delete education from profile
 // @access  Private
 router.delete('/education/:edu_id', passport.authenticate('jwt', {
-  session: false
+  session: false,
 }), async (req, res) => {
-  let errors = {};
+  const errors = {};
 
   try {
     const profile = await Profile.findOne({
-      user: req.user.id
+      user: req.user.id,
     });
 
     const eduLength = profile.education.length;
-    const updatedEdu = profile.education.filter((edu) => !(edu.id === req.params.edu_id));
+    const updatedEdu = profile.education.filter(edu => !(edu.id === req.params.edu_id));
 
     if (eduLength === updatedEdu.length) {
-      errors.noChange = 'No education with this id found!'
+      errors.noChange = 'No education with this id found!';
       return res.send(errors);
     }
     profile.education = updatedEdu;
@@ -340,7 +335,6 @@ router.delete('/education/:edu_id', passport.authenticate('jwt', {
       log.error(e);
       res.status(500).send(errors);
     }
-
   } catch (e) {
     errors.noprofile = 'Proifle not found!';
     res.status(404).json(errors);
@@ -352,8 +346,8 @@ router.delete('/education/:edu_id', passport.authenticate('jwt', {
 // @access  Private
 router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
-    const profile = await Profile.findOneAndRemove({ user: req.user.id });
-    const user = await User.findOneAndRemove({ _id: req.user.id});
+    await Profile.findOneAndRemove({ user: req.user.id });
+    await User.findOneAndRemove({ _id: req.user.id });
     res.json({ success: true });
   } catch (e) {
     res.status(500).send('Something went wrong');
