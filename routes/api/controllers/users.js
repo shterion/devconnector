@@ -88,6 +88,7 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({
       email,
     });
+
     let token;
 
     if (!user) {
@@ -102,6 +103,7 @@ router.post('/login', async (req, res) => {
               id: user.id,
               name: user.name,
               email: user.email,
+              avatar: user.avatar
             };
 
             jwt.sign(payload, secret, {
