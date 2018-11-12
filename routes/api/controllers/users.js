@@ -41,7 +41,7 @@ router.post('/register', async (req, res) => {
         });
         const newUser = new User({
           name: req.body.name,
-          email: req.body.email,
+          email: req.body.email.toLowerCase(),
           avatar,
           password: req.body.password,
         });
@@ -82,8 +82,8 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    const { email } = req.body;
-    const { password } = req.body;
+    const { email, password } = req.body;
+    email = email.toLowerCase();
 
     const user = await User.findOne({
       email,
