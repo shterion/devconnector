@@ -149,10 +149,10 @@ router.post('/', passport.authenticate('jwt', {
         const updatedUser = await Profile.findOneAndUpdate({
           user: req.user.id,
         }, {
-          $set: profileFields,
-        }, {
-          new: true,
-        });
+            $set: profileFields,
+          }, {
+            new: true,
+          });
 
         res.json(updatedUser);
       } catch (e) {
@@ -211,7 +211,7 @@ router.post('/experience', passport.authenticate('jwt', {
         location: req.body.location,
         from: req.body.from,
         to: req.body.to,
-        current: req.body.curent,
+        current: req.body.current,
         description: req.body.description,
       };
 
@@ -253,7 +253,7 @@ router.post('/education', passport.authenticate('jwt', {
         fieldOfStudy: req.body.fieldOfStudy,
         from: req.body.from,
         to: req.body.to,
-        current: req.body.curent,
+        current: req.body.current,
         description: req.body.description,
       };
 

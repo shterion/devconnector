@@ -18,7 +18,7 @@ const validateEducationInput = (data) => {
   }
 
   if (Validator.isEmpty(data.fieldOfStudy)) {
-    errors.fieldOfStudy = 'FieldOfStudy date field is required';
+    errors.fieldOfStudy = 'Field of study field is required';
   }
 
   if (Validator.isEmpty(data.from)) {
