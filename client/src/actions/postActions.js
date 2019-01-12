@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ADD_POST, GET_ERRORS } from './types';
 import { dispatch } from 'rxjs/internal/observable/range';
 
-export const addPost = postData => disaptch => {
+export const addPost = postData => dispatch => {
     axios
         .post('/api/posts', postData)
         .then(res =>
