@@ -4,13 +4,14 @@ import {
   ADD_POST,
   GET_ERRORS,
   GET_POSTS,
+  GET_POST,
   POST_LOADING,
-  DELETE_POST
+  DELETE_POST,
 } from "./types";
 
 export const addPost = postData => dispatch => {
   axios
-    .post("/api/posts", postData)
+    .post('/api/posts', postData)
     .then(res =>
       dispatch({
         type: ADD_POST,
@@ -43,6 +44,24 @@ export const getPosts = () => dispatch => {
       })
     );
 };
+
+// Get Post
+export const getPost = (id) => dispatch => {
+  dispatch(setPostLoading());
+  axios
+    .get(`/api/posts/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_POST,
+        payload: res.data
+      })
+    ).catch(err =>
+      dispatch({
+        type: GET_POST,
+        payload: null
+      })
+    );
+}
 
 // Delete post
 export const deletePost = id => dispatch => {
