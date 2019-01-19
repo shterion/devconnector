@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types';
-import TextAreaFieldGroup from '../common/TextAreaFieldGroup';
-import { addPost } from '../../actions/postActions';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
+import { addPost } from "../../actions/postActions";
 
 class PostForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: '',
+      text: "",
       errors: {}
     };
     this.onChange = this.onChange.bind(this);
@@ -36,7 +36,7 @@ class PostForm extends Component {
     };
 
     this.props.addPost(newPost);
-    this.setState({ text: '' });
+    this.setState({ text: "" });
   }
 
   render() {
@@ -58,12 +58,14 @@ class PostForm extends Component {
                   error={errors.text}
                 />
               </div>
-              <button className="btn btn-dark" type="submit">Submit</button>
+              <button className="btn btn-dark" type="submit">
+                Submit
+              </button>
             </form>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -71,11 +73,14 @@ PostForm.propTypes = {
   addPost: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
-}
+};
 
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors
-})
+});
 
-export default connect(mapStateToProps, { addPost })(PostForm);
+export default connect(
+  mapStateToProps,
+  { addPost }
+)(PostForm);
