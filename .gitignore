@@ -1,6 +1,7 @@
 # Dependency directories
 node_modules
-config
+/config/local.js
+/client/src/config
 
 # Logs
 logs
