@@ -569,11 +569,11 @@ concurrently@^4.0.1:
     tree-kill "^1.1.0"
     yargs "^12.0.1"
 
-config@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/config/-/config-2.0.1.tgz#995ccc8175460578d646ac0a2e4018ffa44ca046"
+config@^3.3.8:
+  version "3.3.8"
+  resolved "https://registry.yarnpkg.com/config/-/config-3.3.8.tgz#14ef7aef22af25877fdaee696ec64d761feb7be0"
   dependencies:
-    json5 "^1.0.1"
+    json5 "^2.2.1"
 
 console-browserify@1.1.x:
   version "1.1.0"
@@ -1720,11 +1720,9 @@ json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
 
-json5@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/json5/-/json5-1.0.1.tgz#779fb0018604fa854eacbf6252180d83543e3dbe"
-  dependencies:
-    minimist "^1.2.0"
+json5@^2.2.1:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
 
 jsonfile@^2.1.0:
   version "2.4.0"
@@ -1978,10 +1976,6 @@ mimic-fn@^1.0.0:
 minimist@0.0.8:
   version "0.0.8"
   resolved "https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
-
-minimist@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
 
 minimist@~0.0.1:
   version "0.0.10"
